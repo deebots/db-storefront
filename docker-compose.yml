@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db_storefront
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  strapi:
+    image: strapi/strapi:5
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi_db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      JWT_SECRET: strapi-jwt-secret
+      ADMIN_JWT_SECRET: strapi-admin-jwt-secret
+      APP_KEYS: strapi-app-key-1,strapi-app-key-2
+      API_TOKEN_SALT: strapi-api-token-salt
+    ports:
+      - "1337:1337"
+    depends_on:
+      - postgres
+    volumes:
+      - strapi_data:/srv/app
+
+volumes:
+  postgres_data:
+  redis_data:
+  strapi_data:
