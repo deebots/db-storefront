@@ -6,7 +6,7 @@ import { Readable } from 'node:stream'
 import serverModule from '../dist/server/server.js'
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  const { default: server } = serverModule as { default: { fetch: (request: Request) => Promise<Response> } }
+  const server = serverModule as { fetch: (request: Request) => Promise<Response> }
 
   const url = new URL(req.url || '/', `https://${req.headers.host}`)
   const request = new Request(url, {
